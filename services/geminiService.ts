@@ -1,4 +1,4 @@
-import { GoogleGenAI, Chat, Content } from "@google/genai";
+import { GoogleGenAI, Chat } from "@google/genai";
 import { SYSTEM_INSTRUCTION } from '../constants';
 
 // Initialize the Gemini AI model
@@ -12,15 +12,15 @@ try {
   // The UI will show an error state.
 }
 
-export const initializeChat = (history?: Content[]): Chat | null => {
+export const initializeChat = (): Chat | null => {
   if (!ai) return null;
 
   const chat = ai.chats.create({
     model: 'gemini-2.5-flash',
-    history,
     config: {
       systemInstruction: SYSTEM_INSTRUCTION,
-      // Fix: Removed tools (googleSearch, googleMaps) as they are not aligned with the AI mentor persona.
+      // The tools are available if the model decides to use them based on conversation
+      tools: [{ googleSearch: {} }, { googleMaps: {} }],
     },
   });
   return chat;
